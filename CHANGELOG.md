@@ -1,5 +1,12 @@
 # Librarian
 
+## 1.3.5
+
+- New fourth reward goal: Greater Friend of the Library for 36 books (level 50), with a choice of
+  Antique Bulwark (shield), Museum Keeper's Chain or Artifact Seeker's Pendant. You turn this one in
+  to the mage trainer (Jennea Cannon in Stormwind, Oran Snakewrithe in Undercity), not the
+  librarian, and its reward cards say so. Thanks to Kestrana for the report.
+
 ## 1.3.4
 
 - Entering Blackrock Mountain now shows its own zone toast for the books inside it ("Magma or

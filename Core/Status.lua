@@ -89,6 +89,14 @@ function ns:GoalDone(goal)
     return questDone(goal.quest)
 end
 
+-- Who takes a goal's quest, own faction: the librarian, or the mage trainer for a trainer goal
+-- (84394, the fourth). goal nil = the librarian.
+function ns:GoalNpc(goal)
+    for _, npc in ipairs(goal and goal.trainer and ns.Trainers or ns.Librarians) do
+        if npc.side == ns:PlayerFaction() then return npc end
+    end
+end
+
 -- Recompute every status and fire STATUS(changedItems) when anything moved.
 function ns:Refresh()
     local changed

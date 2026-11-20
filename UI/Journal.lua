@@ -503,10 +503,9 @@ local function fillReward(card, caption, goal, delivered)
         lines[#lines + 1] = #choices > 1 and L["Your pick: %s (%d/%d)"]:format(name, index, #choices)
             or L["Reward: %s"]:format(name)
     end
-    for _, npc in ipairs(ns.Librarians) do
-        if npc.side == ns:PlayerFaction() then
-            lines[#lines + 1] = L["Turn in at %s, %s"]:format(npc.name, ns:ZoneName(npc.map))
-        end
+    local npc = ns:GoalNpc(goal)
+    if npc then
+        lines[#lines + 1] = L["Turn in at %s, %s"]:format(npc.name, ns:ZoneName(npc.map))
     end
     lines[#lines + 1] = "|cff80ccff" .. L["Click to see all possible rewards"] .. "|r"
     card.where:SetText(table.concat(lines, "\n"))
@@ -640,7 +639,7 @@ local function createHome()
     home.goalBar = ns:CreateSkillBar(home)
     home.goalBar:SetPoint("TOPLEFT", 0, -22)
     home.goalBar:SetPoint("RIGHT", 0, 0) -- no scrollbar beside it: full width
-    -- a mark per goal short of the last one (the bar's end): 10 and 20 of 25
+    -- a mark per goal short of the last one (the bar's end): 10, 20 and 25 of 36
     local last = ns.Goals[#ns.Goals]
     for i = 1, #ns.Goals - 1 do
         home.goalBar:AddMark(ns.Goals[i].books / last.books)
@@ -919,9 +918,7 @@ local ROLE_TEXT = { caster = "For casters", physical = "For physical fighters" }
 local rewardCards, rewardRows = {}, {}
 
 local function turnInNpc()
-    for _, npc in ipairs(ns.Librarians) do
-        if npc.side == ns:PlayerFaction() then return npc end
-    end
+    return ns:GoalNpc(nil)
 end
 
 local function getRewardRow(i)
@@ -972,7 +969,9 @@ local function fillRewardChoice(card, goal, r, pick, suits)
     end
     meta[#meta + 1] = levelText(r.level)
     card.meta:SetText(table.concat(meta, "\n"))
-    card.where:SetText("")
+    -- a goal the mage trainer takes (the fourth): its cards say so, the page header names the librarian
+    local npc = goal.trainer and ns:GoalNpc(goal)
+    card.where:SetText(npc and L["Turn in at %s, %s"]:format(npc.name, ns:ZoneName(npc.map)) or "")
     local picked = pick and pick.item == r.item
     if picked then
         card.state:SetText("|cff40ff40" .. L["Your pick"] .. "|r")

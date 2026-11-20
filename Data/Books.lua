@@ -10,6 +10,7 @@ ns.Goals = {
     { quest = 78150, title = "Friend of the Library", books = 10, level = 1, rewards = { { item = 277203, name = "Scholarly Pendant", role = "caster" }, { item = 277204, name = "Erudite's Amulet", role = "physical" } } },
     { quest = 79536, title = "Greater Friend of the Library", books = 20, level = 20, rewards = { { item = 281635, name = "Philanthropist's Ring", role = "caster" }, { item = 281634, name = "Field Researcher's Loop", role = "physical" } } },
     { quest = 82208, title = "Greater Friend of the Library", books = 25, level = 35, rewards = { { item = 277254, name = "Truthseeker's Bow", role = "physical", classes = { "WARRIOR", "HUNTER", "ROGUE" }, level = 40 }, { item = 277258, name = "Crest of Elucidation", role = "caster", classes = { "WARRIOR", "PALADIN", "SHAMAN" }, level = 40 }, { item = 277260, name = "Researcher's Night Light", role = "caster", level = 40 } } },
+    { quest = 84394, title = "Greater Friend of the Library", books = 36, level = 50, trainer = true, rewards = { { item = 281637, name = "Antique Bulwark", role = "physical", classes = { "WARRIOR", "PALADIN", "SHAMAN" } }, { item = 281636, name = "Museum Keeper's Chain", role = "caster" }, { item = 277202, name = "Artifact Seeker's Pendant", role = "physical" } } },
 }
 
 ns.Librarians = {
