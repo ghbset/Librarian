@@ -1,0 +1,47 @@
+# Keeps this fork in step with thoriphes/Librarian while keeping our commits on top.
+#   main             -> upstream main + OpenMap support + this workflow (the branch to use)
+#   openmap-support  -> upstream main + OpenMap support only (the branch behind upstream PR #1)
+# Both are rebased onto upstream every run. On a conflict that branch is left untouched,
+# the run fails, and GitHub emails you.
+name: Sync with upstream
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours
+  workflow_dispatch:          # "Run workflow" button
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}   # PAT: Contents + Workflows write on this repo
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/thoriphes/Librarian.git
+          git fetch upstream main
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+
+      - name: Rebase branches onto upstream
+        run: |
+          failed=0
+          for branch in main openmap-support; do
+            echo "::group::$branch"
+            git switch -C "$branch" "origin/$branch"
+            if git merge-base --is-ancestor upstream/main HEAD; then
+              echo "$branch is already on top of upstream."
+            elif git rebase upstream/main; then
+              git push origin "HEAD:$branch" --force-with-lease="$branch:origin/$branch"
+            else
+              echo "::error::$branch conflicts with upstream; left unchanged."
+              git status; git diff
+              git rebase --abort
+              failed=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $failed
